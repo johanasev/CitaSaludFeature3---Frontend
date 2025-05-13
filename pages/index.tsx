@@ -1,5 +1,7 @@
-import React from 'react';
-
 export default function Home() {
-  return <h1>¡Hola mundo desde Next.js + TypeScript!</h1>;
+  return (
+    <div className="p-6">
+      <h1 className="text-3xl font-bold text-center">Hola Mundo 🌍</h1>
+    </div>
+  );
 }
