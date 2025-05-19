@@ -1,20 +1,14 @@
-import { useEffect, useState } from 'react';
+// hooks/useMedicos.ts
 
-export interface Especialidad {
-  id: string;
-  nombre: string;
-}
+import { useState, useEffect } from 'react';
+import { fetchMedicos } from '@/services/medicoService';
 
-export const useEspecialidades = () => {
-  const [data, setData] = useState<Especialidad[]>([]);
+export const useMedicos = () => {
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:8080/especialidades') // Ajusta si usas otro puerto o ruta
-      .then((res) => {
-        if (!res.ok) throw new Error('Error al obtener especialidades');
-        return res.json();
-      })
+    fetchMedicos()
       .then(setData)
       .catch((e) => console.error(e))
       .finally(() => setLoading(false));
