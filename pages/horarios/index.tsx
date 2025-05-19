@@ -1,7 +1,7 @@
 import React from 'react';
 import DoctorScheduleTable from '../../components/DoctorScheduleTable';
 import { useRouter } from 'next/router';
-import { useMedicos } from '@/hooks/useMedicos';
+import { useMedicos } from '../../hooks/useMedicos';
 
 const HorariosPage = () => {
   const { data: doctors, loading } = useMedicos();
