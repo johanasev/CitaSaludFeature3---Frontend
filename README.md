@@ -44,4 +44,9 @@ Accede a la versión actual del frontend en:
 
 > El proyecto está configurado con variables de entorno para facilitar la integración futura con servicios de backend.
 
+## 📂 Informe | sprint 1
 
+🔗 [Carpeta de Reporte Frontend](https://github.com/johanasev/CitaSaludFeature3---Frontend)
+
+
+En el enlace encontrarás un video explicativo sobre el desarrollo del frontend durante el primer sprint y el informe de las tareas realizadas.
