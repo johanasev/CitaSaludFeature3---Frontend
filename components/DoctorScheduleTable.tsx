@@ -91,7 +91,6 @@ const DoctorScheduleTable: React.FC<Props> = ({ doctors, onAdd, onUpdate, onDele
                 <td className="px-6 py-4 whitespace-nowrap text-[14px] text-gray-700">{formatHorario(doctor)}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-[14px] text-gray-700">{formatRango(doctor)}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-center text-sm space-x-2">
-                  {/* Botón Agregar con icono y color verde del diseño UX  */}
                   {onAdd && ( // <--- Renderizado condicional añadido
                     <button
                       onClick={() => onAdd(doctor.id)}
