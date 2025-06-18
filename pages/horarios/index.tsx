@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import DoctorScheduleTable from '../../components/DoctorScheduleTable';
 import { useRouter } from 'next/router';
 import { useMedicos } from '../../hooks/useMedicos';
-import withAuth from '@/utils/withAuth';
+//import withAuth from '@/utils/withAuth';
 
 
 const HorariosPage = () => {
@@ -74,6 +74,7 @@ const HorariosPage = () => {
   );
 };
 
-export default withAuth(HorariosPage, ['ROLE_ADMIN', 'ROLE_COORDINADOR']);
+export default HorariosPage;
+
 
 
