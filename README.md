@@ -44,6 +44,10 @@ Accede a la versión actual del frontend en:
 
 > El proyecto está configurado con variables de entorno para facilitar la integración futura con servicios de backend.
 
+Accede a la versión actual del backend con Swagger UI en:
+
+🔗 [https://citasaludfeature3.onrender.com/swagger-ui/index.html#/](https://citasaludfeature3.onrender.com/swagger-ui/index.html#/)
+
 ## 📂 Informe | sprint 1 y 2
 
 🔗 [Carpeta de Reporte Frontend](https://github.com/johanasev/CitaSaludFeature3---Frontend)
