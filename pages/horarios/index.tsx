@@ -74,5 +74,6 @@ const HorariosPage = () => {
   );
 };
 
-export default withAuth(HorariosPage, ['ADMINISTRADOR', 'COORDINADOR']);
+export default withAuth(HorariosPage, ['ROLE_ADMIN', 'ROLE_COORDINADOR']);
+
 
