@@ -15,7 +15,7 @@ export default function LoginPage() {
 
 const handleLogin = async () => {
   try {
-    const response = await axios.post('https://citasaludfeature3.onrender.com/api/auth/login', {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
       email,
       password
     })
