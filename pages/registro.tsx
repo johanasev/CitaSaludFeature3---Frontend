@@ -9,30 +9,42 @@ export default function RegistroPage() {
   const [password, setPassword] = useState('');
   const [confirmar, setConfirmar] = useState('');
   const [numeroDocumento, setNumeroDocumento] = useState('');
-  const [especialidad, setEspecialidad] = useState('');
-  const [rol, setRol] = useState('');
+  const [especialidad, setEspecialidad] = useState(''); // Asumo que es el ID de la especialidad
+  const [rol, setRol] = useState(''); // Asumo que es el ID del rol
   const [especialidades, setEspecialidades] = useState([]);
   const [roles, setRoles] = useState([]);
   const [mensaje, setMensaje] = useState('');
+  const [errorVisible, setErrorVisible] = useState(false); // Para controlar la visibilidad del mensaje de error/éxito
   const router = useRouter();
 
   // Cargar especialidades y roles al montar el componente
   useEffect(() => {
+    // Para especialidades, si tu API devuelve un array de objetos con id y nombre
     axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/especialidades`)
       .then((res) => setEspecialidades(res.data))
       .catch((err) => console.error("Error al cargar especialidades", err));
 
+    // Para roles, si tu API devuelve un array de objetos con id y nombre
     axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/roles`)
       .then((res) => setRoles(res.data))
       .catch((err) => console.error("Error al cargar roles", err));
   }, []);
 
   const handleRegistro = async () => {
+    setMensaje(''); // Limpiar mensajes anteriores
+    setErrorVisible(false);
+
     if (password !== confirmar) {
       setMensaje('❌ Las contraseñas no coinciden');
+      setErrorVisible(true);
       return;
     }
 
+    if (!nombre || !apellido || !email || !password || !confirmar || !numeroDocumento || !especialidad || !rol) {
+      setMensaje('⚠️ Por favor, completa todos los campos.');
+      setErrorVisible(true);
+      return;
+    }
 
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/medicos/crearmedico`, {
@@ -40,17 +52,17 @@ export default function RegistroPage() {
         apellido,
         email,
         password,
-        tipoDocumento: "CC",
+        tipoDocumento: "CC", // Se mantiene fijo según tu código actual
         numeroDocumento,
-        especialidadId: parseInt(especialidad),
-        rolId: parseInt(rol)
+        especialidadId: parseInt(especialidad), // Asegúrate de que especialidad sea un ID numérico
+        rolId: parseInt(rol) // Asegúrate de que rol sea un ID numérico
       });
 
-      console.log({
+      console.log("Datos enviados:", {
         nombre,
         apellido,
         email,
-        password,
+        password: "********", // No loguear la contraseña real
         tipoDocumento: "CC",
         numeroDocumento,
         especialidadId: parseInt(especialidad),
@@ -59,50 +71,115 @@ export default function RegistroPage() {
 
       if (response.status >= 200 && response.status < 300) {
         setMensaje('✅ Registro exitoso. Serás redirigido al login...');
+        setErrorVisible(false); // Es un mensaje de éxito
         setTimeout(() => router.push('/login'), 2000);
       }
-    } catch (error) {
-      console.error(error);
-      setMensaje('❌ Error al registrar. Verifica los datos o si el usuario ya existe.');
+    } catch (error: any) { // Usar 'any' para el tipo de error o una interfaz más específica si la tienes
+      console.error("Error en el registro:", error);
+      let errorMessage = '❌ Error al registrar. Verifica los datos o si el usuario ya existe.';
+      if (error.response && error.response.data && error.response.data.message) {
+        errorMessage = `❌ Error: ${error.response.data.message}`;
+      }
+      setMensaje(errorMessage);
+      setErrorVisible(true);
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-96">
-        <h2 className="text-xl mb-4 font-semibold text-center">Registro de Usuario</h2>
+  <div className="relative min-h-screen flex flex-col bg-[#D9DBE0] font-inter"> {/* Contenedor principal ajustado */}
+      {/* HEADER: Ancho completo, fondo azul oscuro, texto centrado, blanco y negrita */}
+      <header className="w-full bg-[#5E7FD3] py-4 shadow-lg flex justify-center items-center">
+        <h1 className="text-white text-4xl font-extrabold tracking-wide">CITA SALUD</h1>
+      </header>  
+    <div className="min-h-screen flex items-center justify-center bg-[#D9DBE0] font-inter p-2"> {/* Fondo y fuente global */}
+      <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md"> {/* Contenedor del formulario */}
+        <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Registrar un Nuevo Médico</h2> {/* Título más grande */}
 
-        <input type="text" placeholder="Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} className="w-full mb-2 px-3 py-2 border rounded" />
-        <input type="text" placeholder="Apellido" value={apellido} onChange={(e) => setApellido(e.target.value)} className="w-full mb-2 px-3 py-2 border rounded" />
-        <input type="email" placeholder="Correo electrónico" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full mb-2 px-3 py-2 border rounded" />
-        <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full mb-2 px-3 py-2 border rounded" />
-        <input type="password" placeholder="Confirmar contraseña" value={confirmar} onChange={(e) => setConfirmar(e.target.value)} className="w-full mb-2 px-3 py-2 border rounded" />
-        <input type="text" placeholder="Número de documento" value={numeroDocumento} onChange={(e) => setNumeroDocumento(e.target.value)} className="w-full mb-2 px-3 py-2 border rounded" />
+        <div className="space-y-4"> {/* Espacio entre los campos del formulario */}
+          <input
+            type="text"
+            placeholder="Nombre"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1A50D8] transition duration-200"
+          />
+          <input
+            type="text"
+            placeholder="Apellido"
+            value={apellido}
+            onChange={(e) => setApellido(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1A50D8] transition duration-200"
+          />
+          <input
+            type="email"
+            placeholder="Correo electrónico"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1A50D8] transition duration-200"
+          />
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1A50D8] transition duration-200"
+          />
+          <input
+            type="password"
+            placeholder="Confirmar contraseña"
+            value={confirmar}
+            onChange={(e) => setConfirmar(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1A50D8] transition duration-200"
+          />
+          <input
+            type="text" // Cambiado a text para permitir guiones si tu número de documento los tiene
+            placeholder="Número de documento"
+            value={numeroDocumento}
+            onChange={(e) => setNumeroDocumento(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1A50D8] transition duration-200"
+          />
 
-        <select value={especialidad} onChange={(e) => setEspecialidad(e.target.value)} className="w-full mb-2 px-3 py-2 border rounded">
-          <option value="">Selecciona una especialidad</option>
-          {especialidades.map((esp: any) => (
-            <option key={esp.especialidadId} value={esp.especialidadId}>
-              {esp.especialidad}
-            </option>
-          ))}
-        </select>
+          <select
+            value={especialidad}
+            onChange={(e) => setEspecialidad(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#1A50D8] transition duration-200 appearance-none" // appearance-none para controlar mejor el estilo con flecha personalizada si la quieres
+          >
+            <option value="" disabled>Selecciona una especialidad</option> {/* disabled para que sea el placeholder */}
+            {especialidades.map((esp: any) => (
+              <option key={esp.especialidadId} value={esp.especialidadId}>
+                {esp.especialidad}
+              </option>
+            ))}
+          </select>
 
-        <select value={rol} onChange={(e) => setRol(e.target.value)} className="w-full mb-4 px-3 py-2 border rounded">
-          <option value="">Selecciona un rol</option>
-          {roles.map((r: any) => (
-            <option key={r.rolId} value={r.rolId}>
-              {r.nombre}
-            </option>
-          ))}
-        </select>
+          <select
+            value={rol}
+            onChange={(e) => setRol(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#1A50D8] transition duration-200 appearance-none"
+          >
+            <option value="" disabled>Selecciona un rol</option> {/* disabled para que sea el placeholder */}
+            {roles.map((r: any) => (
+              <option key={r.rolId} value={r.rolId}>
+                {r.nombre}
+              </option>
+            ))}
+          </select>
+        </div> {/* Cierre de space-y-4 */}
 
-        {mensaje && <p className="text-center text-sm mb-2 text-red-600">{mensaje}</p>}
+        {mensaje && (
+          <p className={`text-center text-sm mt-4 p-2 rounded ${errorVisible ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+            {mensaje}
+          </p>
+        )}
 
-        <button onClick={handleRegistro} className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+        <button
+          onClick={handleRegistro}
+          className="w-full bg-[#1DD313] text-white py-3 rounded-lg hover:bg-[#153a8d] transition-colors duration-200 mt-6 font-semibold text-lg shadow-md"
+        >
           Registrarse
         </button>
       </div>
     </div>
+  </div>
   );
 }
