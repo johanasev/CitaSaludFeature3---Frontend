@@ -50,7 +50,7 @@ Accede a la versión actual del backend con Swagger UI en:
 
 ## 📂 Informe | sprint 1 y 2
 
-🔗 [Carpeta de Reporte Frontend](https://github.com/johanasev/CitaSaludFeature3---Frontend)
+🔗 [Carpeta de Reporte Frontend](https://drive.google.com/drive/folders/1K8xcQ0NbnUVgAiHG1CQzt94gE5fp_ybS?usp=sharing)
 
 
 En el enlace encontrarás un video explicativo sobre el desarrollo del frontend durante el primer sprint y el informe de las tareas realizadas.
